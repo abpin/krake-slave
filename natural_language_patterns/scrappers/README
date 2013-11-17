@@ -1,0 +1,16 @@
+File:// scrapper_phantom.coffee
+  Description: The base class from which all other scrapping class types extends. A wrapper for the underlying PhantomJs object
+
+File:// listing_page_scrapper
+  Description: This class extends upon scrapper class,
+    retrieves list of items in the current URL, allows hook-ins for interim_callback and final_callback
+        interim_callback :
+            returns listing_obj
+            returns next_page_href
+        final_callback :
+            returns false
+
+File:// geolocation_scrapper
+  Description: This class extends upon scrapper class
+    given chunks of raw text, it currently extracts valid country and zipcodes, thereafter tagging them with geolocations information like  
+    Latitude and Longitude

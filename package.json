@@ -1,0 +1,21 @@
+{
+    "author": "Gary Teh <garyjob@gmail.com>",
+    "name": "krake-slave"
+  , "main": "./krake_slave.coffee"
+  , "version": "0.0.1"
+  , "engines": {
+    "node": "=0.6.11"
+  }  
+  , "dependencies": {
+      "apparatus": ""
+    , "async": ""
+    , "geocoder": ""
+    , "hiredis": ""
+    , "krake-queue": "https://github.com/KrakeIO/krake-queue/tarball/master"    
+    , "krake-toolkit": "0.0.8"
+    , "kson": "https://github.com/KrakeIO/kson/tarball/master"
+    , "natural": ""
+    , "redis": ""
+    , "request": ""
+  }
+}
