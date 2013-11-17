@@ -134,7 +134,7 @@ class NetworkSlave
       '\n\t\tURL : ' + task_info_obj.origin_url
       , 'information'
           
-      url = CONFIG.usageServer + '/take-token/' + task_info_obj.auth_token + '/' + 
+      url = @config.usageServer + '/take-token/' + task_info_obj.auth_token + '/' + 
             task_info_obj.pgParams.tableName + '/' + task_info_obj.origin_url
             
       request url, (error, response, do_task)=>
@@ -162,7 +162,7 @@ class NetworkSlave
         '\n\t\tURL : ' + task_info_obj.origin_url +
         '\n\t\tTableName' + task_info_obj.pgParams.tableName, task_info_obj, 'error'
       
-      url = CONFIG.usageServer + '/return-token/' + task_info_obj.auth_token + '/' + task_info_obj.pgParams.tableName
+      url = @config.usageServer + '/return-token/' + task_info_obj.auth_token + '/' + task_info_obj.pgParams.tableName
       request url, (error, response, body)=>
         @log '[NETWORK_SLAVE] : Token returned ' +
           '\n\t\tURL : ' + task_info_obj.origin_url +
@@ -437,7 +437,7 @@ class NetworkSlave
         task_info_obj.rdbParams ||
         task_info_obj.pgParams ||
         task_info_obj.destination_url
-      ) && CONFIG && CONFIG.publishingServer
+      ) && @config && @config.publishingServer
         @publishStack.push [task_info_obj, interim_result_obj]
   
   
@@ -445,7 +445,7 @@ class NetworkSlave
   # @Description: processes the task in the publish stack
   #   if nothing is happening idle for 5 seconds and then check the stack again — recursive
   processPublishStack: ()->
-    if !CONFIG || !CONFIG.publishingServer then return
+    if !@config || !@config.publishingServer then return
     
     if @publishStack.length == 0 
       setTimeout ()=>
@@ -457,7 +457,7 @@ class NetworkSlave
       @print_request = true
       options = 
         method: 'POST'  
-        url : CONFIG.publishingServer + '/publish'
+        url : @config.publishingServer + '/publish'
         json : 
           task_info_obj : result[0]
           interim_result_obj : result[1]
@@ -479,7 +479,7 @@ class NetworkSlave
   #   this particular use case only happens when the scheduler pushes the krakes to our engine
   log_usage: (task_info_obj)->
     if task_info_obj && task_info_obj.quota_limited && task_info_obj.pgParams && task_info_obj.pgParams.tableName && task_info_obj.origin_url
-      url = CONFIG.usageServer + '/record-usage/' + task_info_obj.auth_token + '/'+ task_info_obj.pgParams.tableName + '/' + task_info_obj.origin_url
+      url = @config.usageServer + '/record-usage/' + task_info_obj.auth_token + '/'+ task_info_obj.pgParams.tableName + '/' + task_info_obj.origin_url
       console.log '[NETWORK_SLAVE] : Recording the usage to %s', url
       request url, (error, response, body)=>
         if !error && response.statusCode == 200
