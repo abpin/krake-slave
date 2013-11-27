@@ -12,7 +12,7 @@
     , "geocoder": ""
     , "hiredis": ""
     , "krake-queue": "https://github.com/KrakeIO/krake-queue/tarball/master"    
-    , "krake-toolkit": "0.0.14"
+    , "krake-toolkit": "https://github.com/KrakeIO/krake-toolkit/tarball/master"
     , "kson": "https://github.com/KrakeIO/kson/tarball/master"
     , "natural": ""
     , "redis": ""
