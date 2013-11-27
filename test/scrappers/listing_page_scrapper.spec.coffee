@@ -4,14 +4,27 @@ KSON = require 'kson'
 fs = require 'fs'
 jasmine.getEnv().defaultTimeoutInterval = 30000
 
-global.CONFIG = null;
-global.ENV = (process.env['NODE_ENV'] || 'development').toLowerCase()
-try 
-  CONFIG = KSON.parse(fs.readFileSync('./config/config.js').toString())[ENV];
-catch error
-  console.log('cannot parse config.js')
-  process.exit(1)
-
+global.CONFIG = {
+  "redis": {
+    "host": "localhost",
+    "port": "6379",
+    "scrapeMode": "depth",
+    "queueName": "queue1"
+  },
+  "usageServer" : "http://localhost:9805",
+  "publishingServer" : "http://localhost:9806",
+  "phoenixServer" : {
+    "url" : "http://localhost:9801",
+    "pageCrawlLimit" : 100,
+  },
+  "phantomServer" : {
+    "host" : "localhost",
+    "port" : "9701",
+    "path" : "/extract",
+    "timeout" : 120      
+  },
+  "canRotateIP" : "cannot"
+}
 
 describe "ensure valid email addresses are returned when required_attribute = email ", ()->
   it "should respond with success and a valid email ", (done)->
