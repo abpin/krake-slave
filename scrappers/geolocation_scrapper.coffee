@@ -40,11 +40,10 @@ class GeolocationScrapper
   #         hq_location : '2157 Geylang'
   #         office_location : '2157 Sengkang'
   # @param: initial_callback:function()
-  constructor: (options)->
+  constructor: (@options)->
     @countries = fs.readFileSync(__dirname + '/../natural_language_patterns/countries').toString().split(/\n/)  
     @minimal_match_threshold = 0.9
-    Scrapper.call this, options, ()->
-      initial_callback()
+    @prior_data_obj = @options.data || []
   
   # @Description: The default interface external processes use to interact with a Scrapper object.
   # @param: interim_callback:function(scenario:string, updated_data_objs:array)
@@ -77,7 +76,7 @@ class GeolocationScrapper
   #     }]
   #     
   # @param: final_callback:function()  
-  processTask : (interim_callback, final_callback)->
+  processTask : (callback)->
     console.log 'gs: processing task'
     extracted_entries = []
     
@@ -93,36 +92,33 @@ class GeolocationScrapper
 
       cloned_obj
     
-    
-    
     async.forEachSeries @options.columns, (curr_col, next)=>
-        
-        # extracts country name and zipcode
-        address_text = @prior_data_obj[curr_col.col_name]
-                    
-        # extracts geolocation for each country name and zipcode extracted
-        @fetchGeolocation address_text, (geolocations)=>
-           
-          for x in [0...geolocations.length]
-            updated_data_obj = clone(@prior_data_obj) 
-            extracted_entries.push(updated_data_obj)
-                        
-            lat_key = curr_col.latitude || curr_col.col_name + '_lat'
-            lng_key = curr_col.longitude || curr_col.col_name + '_lng'
-            country_key = curr_col.country || curr_col.col_name + '_country'
-            zip_key = curr_col.zipcode || curr_col.col_name + '_zip'
-            updated_data_obj[lat_key] = geolocations[x].lat
-            updated_data_obj[lng_key] = geolocations[x].lng
-            # updated_data_obj[country_key] = curr_add_obj.country
-            updated_data_obj[country_key] = "NA"
-            # updated_data_obj[zip_key] = "NA"
-            updated_data_obj[zip_key] = "NA"
+      
+      # extracts country name and zipcode
+      address_text = @prior_data_obj[curr_col.col_name]
+                  
+      # extracts geolocation for each country name and zipcode extracted
+      @fetchGeolocation address_text, (geolocations)=>
+         
+        for x in [0...geolocations.length]
+          updated_data_obj = clone(@prior_data_obj) 
+          extracted_entries.push(updated_data_obj)
+                      
+          lat_key = curr_col.latitude || curr_col.col_name + '_lat'
+          lng_key = curr_col.longitude || curr_col.col_name + '_lng'
+          country_key = curr_col.country || curr_col.col_name + '_country'
+          zip_key = curr_col.zipcode || curr_col.col_name + '_zip'
+          updated_data_obj[lat_key] = geolocations[x].lat
+          updated_data_obj[lng_key] = geolocations[x].lng
+          # updated_data_obj[country_key] = curr_add_obj.country
+          updated_data_obj[country_key] = "NA"
+          # updated_data_obj[zip_key] = "NA"
+          updated_data_obj[zip_key] = "NA"
+          
+        next()
             
-          next()
-              
-      , (err)=>
-        interim_callback && interim_callback 'listing with geolocation information attached', extracted_entries
-        final_callback && final_callback()
+    , (err)=>
+      callback && callback 'listing with geolocation information attached', extracted_entries
 
 
 

@@ -331,7 +331,7 @@ class NetworkSlave
             
                 # Event whereby the column with nested option has no URL to link to 
                 else if !current_result[selected_nest_col['col_name']]
-                  @qi.broadcast task_info_obj.task_id, 'results', current_result                  
+                  @qi.broadcast task_info_obj.task_id, 'results', current_result
                   @appendPublishStack task_info_obj, current_result
 
 
@@ -393,30 +393,27 @@ class NetworkSlave
   
 
   doGeolocation: (task_info_obj)->
-  
+
     # TODO: need to handle situation whereby the indicated column for mining does not exist in record
     @log '[NETWORK_SLAVE] : Converting addresses into geolocations', task_info_obj, 'information'
-    @gs = new GeolocationScrapper task_info_obj, ()=>
-      @log '[NETWORK_SLAVE] : geolocation scrapper created'
+    @gs = new GeolocationScrapper task_info_obj
 
-    @gs.processTask (scenario, interim_results)=>
-      results_length = interim_results.length         
+    @gs.processTask (scenario, geo_results)=>
+      results_length = geo_results.length         
       @log '[NETWORK_SLAVE] : Extracted ' + results_length + 
         ' results with their addresses ', task_info_obj, 'information'
-      if interim_results.length == 0
+      if geo_results.length == 0
         results_channel_key = @qi.getResultsChannelKey task_info_obj.master_id, task_info_obj.task_id
         @qi.broadcast task_info_obj.task_id, 'results', task_info_obj.data        
         @appendPublishStack task_info_obj, task_info_obj.data
 
       else
-        for x in [0...interim_results.length]      
-          @log '[NETWORK_SLAVE] : Returning ' + interim_results.length + 
+        for x in [0...geo_results.length]      
+          @log '[NETWORK_SLAVE] : Returning ' + geo_results.length + 
             ' results and their geolocation', task_info_obj, 'information'
           results_channel_key = @qi.getResultsChannelKey task_info_obj.master_id, task_info_obj.task_id
           @qi.broadcast task_info_obj.task_id, 'results', task_info_obj.data          
-          @appendPublishStack task_info_obj, interim_results[x]
-
-    , ()=>
+          @appendPublishStack task_info_obj, geo_results[x]
   
       if !@is_kamikaze
         @currentState = 'idle'
