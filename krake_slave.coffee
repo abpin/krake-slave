@@ -274,8 +274,9 @@ class NetworkSlave
             next_page_url = interim_results
             @log '[NETWORK_SLAVE] : URL for next page in listing : ' + next_page_url, task_info_obj, 'information'
             new_task_info = @duplicateTaskInfoObj(task_info_obj)
-            new_task_info.origin_url = next_page_url            
-            new_task_info.columns = task_info_obj.columns            
+            new_task_info.origin_url = next_page_url
+            new_task_info.to_click = task_info_obj.to_click
+            new_task_info.columns = task_info_obj.columns
             new_task_info.exclude_jquery = task_info_obj.exclude_jquery
             new_task_info.wait = task_info_obj.wait
             new_task_info.data = task_info_obj.data
@@ -312,6 +313,7 @@ class NetworkSlave
               interim_results.forEach (current_result)=>
 
                 new_task_info_obj = @duplicateTaskInfoObj(task_info_obj)
+                new_task_info_obj.to_click = selected_nest_col.options.to_click                
                 new_task_info_obj.columns = selected_nest_col.options.columns
                 new_task_info_obj.exclude_jquery = selected_nest_col.options.exclude_jquery
                 new_task_info_obj.wait = selected_nest_col.options.wait
@@ -492,7 +494,7 @@ class NetworkSlave
     new_task_info_obj.task_id = task_info_obj.task_id
     new_task_info_obj.cookies = task_info_obj.cookies
     new_task_info_obj.auth_token = task_info_obj.auth_token                          
-    new_task_info_obj.quota_limited = task_info_obj.quota_limited                          
+    new_task_info_obj.quota_limited = task_info_obj.quota_limited
     new_task_info_obj.rdbParams = task_info_obj.rdbParams
     new_task_info_obj.pgParams = task_info_obj.pgParams
     new_task_info_obj.mongoParams = task_info_obj.mongoParams
