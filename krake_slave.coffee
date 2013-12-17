@@ -58,7 +58,7 @@ class NetworkSlave
     # Listens for status ping - if not idling then beg for mercy
     @qi.setEventListener 'status ping', (queueName, resObj)=>
       if @currTaskQueueName != queueName then return
-      if @currentState =='busy' || @currentState =='queueing' || @publishStack.length > 0
+      if @currentState =='busy' || @publishStack.length > 0
         console.log '[NETWORK_SLAVE] : status ping received. ' + 
           '\n\t\tRequest for delay in termination'
         @qi.broadcast @currTaskQueueName, 'mercy'
